@@ -158,11 +158,12 @@ module Delayed
     end
 
     def run(job)
+      say "#{job.name} #{job.id} started"
       runtime =  Benchmark.realtime do
         Timeout.timeout(self.class.max_run_time.to_i) { job.invoke_job }
         job.destroy
       end
-      say "#{job.name} completed after %.4f" % runtime
+      say "#{job.name} #{job.id} completed after %.4f" % runtime
       return true  # did work
     rescue DeserializationError => error
       job.last_error = "{#{error.message}\n#{error.backtrace.join("\n")}"
