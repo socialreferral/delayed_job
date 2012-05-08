@@ -91,6 +91,7 @@ module Delayed
         Delayed::Worker.lifecycle.run_callbacks(:invoke_job, self) do
           begin
             hook :before
+            payload_object.job_id = self.if if payload_object.respond_to?("job_id=")
             payload_object.perform
             hook :success
           rescue Exception => e
