@@ -13,7 +13,7 @@ describe Delayed::MessageSending do
     end
 
     it "should create a PerformableMethod" do
-      story = Story.new
+      story = Story.create
       lambda {
         job = story.tell!(1)
         job.payload_object.class.should == Delayed::PerformableMethod
@@ -89,7 +89,7 @@ describe Delayed::MessageSending do
       job.run_at.should == run_at
       job.priority.should == 20
     end
-    
+
     it "should not delay the job when delay_jobs is false" do
       Delayed::Worker.delay_jobs = false
       fairy_tail = FairyTail.new
@@ -99,7 +99,7 @@ describe Delayed::MessageSending do
         }.should change(fairy_tail, :happy_ending).from(nil).to(true)
       }.should_not change { Delayed::Job.count }
     end
-    
+
     it "should delay the job when delay_jobs is true" do
       Delayed::Worker.delay_jobs = true
       fairy_tail = FairyTail.new

@@ -37,7 +37,7 @@ Run @bundle install@ to install the backend and delayed_job gems.
 The Active Record backend requires a jobs table. You can create that table by running the following command:
 
 <pre>
-$ script/rails generate delayed_job:active_record
+$ rails generate delayed_job:active_record
 $ rake db:migrate
 </pre>
 
@@ -48,7 +48,7 @@ Delayed Job 3.0.0 introduces a new column to the delayed_jobs table.
 If you're upgrading from Delayed Job 2.x, run the upgrade generator to create a migration to add the column.
 
 <pre>
-$ script/rails generate delayed_job:upgrade
+$ rails generate delayed_job:upgrade
 $ rake db:migrate
 </pre>
 
@@ -142,7 +142,7 @@ h2. Running Jobs
 
 @script/delayed_job@ can be used to manage a background process which will start working off jobs.
 
-To do so, add @gem "daemons"@ to your @Gemfile@ and make sure you've run `script/rails generate delayed_job`.
+To do so, add @gem "daemons"@ to your @Gemfile@ and make sure you've run `rails generate delayed_job`.
 
 You can then do the following:
 
@@ -252,6 +252,8 @@ Delayed::Worker.destroy_failed_jobs = false. The failed jobs will be marked with
 
 By default all jobs are scheduled with priority = 0, which is top priority. You can change this by setting Delayed::Worker.default_priority to something else. Lower numbers have higher priority.
 
+The default behavior is to read 5 jobs from the queue when finding an available job. You can configure this by setting Delayed::Worker.read_ahead.
+
 It is possible to disable delayed jobs for testing purposes. Set Delayed::Worker.delay_jobs = false to execute all jobs realtime.
 
 Here is an example of changing job parameters in Rails:
@@ -262,6 +264,7 @@ Delayed::Worker.destroy_failed_jobs = false
 Delayed::Worker.sleep_delay = 60
 Delayed::Worker.max_attempts = 3
 Delayed::Worker.max_run_time = 5.minutes
+Delayed::Worker.read_ahead = 10
 Delayed::Worker.delay_jobs = !Rails.env.test?
 </pre>
 
